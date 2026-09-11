@@ -27,7 +27,7 @@ description: 在撰写、评审、恢复、修剪或审计本仓库的中文或�
 
 **派生物先改 owner 再重新生成**：`lib/`（由 `src/` + tsdown 生成）与 `shell/profile-template/`（由源同步）。
 
-**变更叙事在本仓库有五个合法主场**：`docs/release-notes-*.md`、`docs/决策/`、`docs/设计/`、`docs/排查/`、`shell/docs/pitfalls.md`——在那里它是**内容本体**，不是泄漏。修剪默认不进入这些路径。
+**变更叙事在本仓库有六个合法载体**：`docs/release-notes-*.md`、`docs/决策/`、`docs/设计/`、`docs/排查/`、`shell/docs/pitfalls.md`，以及任何 skill 目录下的 **`SOURCE.md`**——在那里它是**内容本体**，不是泄漏。修剪默认不进入这些路径。
 
 ## 保住完整命题
 
