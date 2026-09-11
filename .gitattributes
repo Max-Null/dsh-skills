@@ -1,0 +1,6 @@
+# 强制 LF 行尾。
+#
+# 理由：本包在 skills/ssid-record-browser-gif/SOURCE.md 里记录了编码器脚本的
+# SHA256（用于日后比对上游是否改动）。而本机系统级 core.autocrlf=true 会让
+# checkout 把 .py 变成 CRLF，那个哈希随即失效。强制 LF 让仓库内容跨平台一致。
+* text=auto eol=lf
