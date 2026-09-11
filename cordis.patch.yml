@@ -1,0 +1,6 @@
+# @max-null/dsh-skills bundle patch: one insert over the profile root.
+# Registers a packaged SkillProvider (rank 550) that serves the SSiD-adapted
+# skills shipped under this package's skills/ directory.
+- insert:
+    - id: dsh-skills
+      name: '@max-null/dsh-skills'

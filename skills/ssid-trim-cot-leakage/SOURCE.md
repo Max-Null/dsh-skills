@@ -1,0 +1,53 @@
+# 来源与版本
+
+| 项 | 值 |
+|---|---|
+| 上游 skill | `dsh-trim-cot-leakage` |
+| 上游路径 | `DSHFork/.agents/skills/dsh-trim-cot-leakage/` |
+| 上游版本锚点 | `c291e7961a`（2026-09-10 抓取） |
+| 上游体量 | SKILL.md 45 行 + `references/examples.md` 275 行 + `references/recall-batteries.md` 52 行 = **372 行** |
+| 适配日期 | 2026-09-10 |
+| 适配类型 | 小改（references 重写 + scope 规则本地化） |
+| 依赖 | `ssid-prose-standard`——**双向依赖，同批安装** |
+| 适配依据 | `seek-soul-in-darkness/docs/决策/2026-09-10-skill适配说明-02-推理痕迹修剪.md` |
+
+## 与上游的差异
+
+**保留**（判据一字未减）：
+
+- `The one test`（唯一的测试）整段：**一个处在 HEAD、拿不到任何会话记录、PR 讨论或未提交草稿的读者，能不能解析每一个引用、核实每一条断言？** 这是整份 skill 的支点，与语言无关。
+- `Taxonomy` 的 8 类全部保留。
+- `What is not leakage` 的 9 条保留规则全部保留。
+- 引用检查会**向两个方向出错**（删掉持久引用、留下死引用）这一前提。
+
+**改写**：
+
+- 引言：依赖声明指向 `ssid-prose-standard`，并注明两者必须同批安装。
+- 第 8 类「写作语言滑落」：上游讲「英文文档里混入中文」，本仓库主体是中文，改为**同语言内的滑落**（未加工的工作语言片段、未翻译的排版残留）。
+- `Workflow` 5 步：scope 新增五个合法主场豁免，并默认收窄到指令表面；删掉本仓库不存在的门禁（`verify-type-equiv` / `verify-translation-pairing`），换成重跑受影响的 L1。
+
+**新增**：
+
+- **第 10 条保留规则——五个合法主场**：`docs/release-notes-*.md`、`docs/决策/`、`docs/设计/`、`docs/排查/`、`shell/docs/pitfalls.md`。依据：本仓库实测扫描在 `**/*.md` 上命中 202 处，**分布集中于这些路径**；而 `skills/*/SKILL.md` 等指令表面只有少量命中却最致命。上游只认 Agent Notes 一个主场，本仓库有五个。
+- **无文档门禁的显式警告**：上游第 5 步靠 `doc-sync` 一类检查兜底，本仓库没有——这条写进正文，避免 agent 假设有自动化接住遗漏。
+
+**重写**：
+
+- `references/recall-batteries.md`：上游探针针对「英文为主 + `.zh.md` 对照」的语言格局，其中文 battery 全部是「在英文表面里找中文残留」，在本仓库失效。改为**以中文为主探针集**（4 组）+ 保留英文探针。三条校准纪律逐字保留：**零命中不证明任何事直到命中已知正例**、**探针是探针不是定义**、**已知假阳性家族随探针迁移**。
+- `references/examples.md`：**本版为精简重写**（上游 275 行 / 17 节）。保留最关键的一节 `Overcorrection traps` 四类（把义务翻转成背书 / 把假设升格为已交付特性 / 连带删掉真事实 / 留下数字丢了出处），案例全部换成中文；上游其余 13 节的逐类样本**尚未补齐**。
+
+**删除**：无。上游判据一条未删。
+
+## 尚未落地的部分
+
+`references/examples.md` 目前只覆盖「过度修剪陷阱」（4 类）+ 6 个保留样本；上游按 8 类分类法逐类给出样本（另含 `Behavior-visible candidates` 一节），**这部分待补**。
+
+补齐时不要照译上游案例——上游案例绑定 DSH 的目录与机制，必须用本仓库的真实样本替换。
+
+## 上游变动时的跟进方式
+
+上游无版本号，只有 commit 可靠。跟进方法：
+
+1. `git -C DSHfork fetch && git -C DSHfork log --oneline c291e7961a..origin/master -- .agents/skills/dsh-trim-cot-leakage/`
+2. 若该目录有变动，对照本文件「与上游的差异」逐条重判。
+3. 更新本文件的版本锚点与适配日期。

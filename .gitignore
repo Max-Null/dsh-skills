@@ -1,0 +1,8 @@
+node_modules/
+*.log
+*.tgz
+.DS_Store
+
+# Python 缓存（record-browser-gif 的编码器自测会生成）
+__pycache__/
+*.pyc

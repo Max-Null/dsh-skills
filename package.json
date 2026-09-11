@@ -1,0 +1,46 @@
+{
+  "name": "@max-null/dsh-skills",
+  "version": "0.1.0",
+  "description": "DSH 官方 skill 的 SSiD 适配版：把 deepseek-harness .agents/skills 的工程判据移植到思灵仓库，每份 skill 附 SOURCE.md 来源与版本标记",
+  "type": "module",
+  "main": "lib/index.mjs",
+  "exports": {
+    ".": "./lib/index.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "skills",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Max-Null/dsh-skills.git"
+  },
+  "homepage": "https://github.com/Max-Null/dsh-skills#readme",
+  "bugs": {
+    "url": "https://github.com/Max-Null/dsh-skills/issues"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "ssid",
+    "skill",
+    "skills"
+  ],
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.1"
+  }
+}
