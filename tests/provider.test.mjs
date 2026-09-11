@@ -104,3 +104,22 @@ test('每个 skill 的 frontmatter 只含受支持的字段，且 description �
     assert.ok(!/^(步骤|流程)/.test(candidate.description), `${candidate.name} 的 description 不应以工作流摘要开头`)
   }
 })
+
+test('rank 550 的意义：两个不等式都要成立（lower wins）', async () => {
+  // 常量取自 DSH 源码，不是本包定义的：
+  //   packages/skill/skill/src/index.ts          → BUNDLED_SKILL_RANK = 600
+  //   packages/skill/skill-filesystem/src/index.ts → USER_AGENTS_RANK = 500
+  // 优先级规则是“数字小的赢”，且只在同一 layer 内决定重复。
+  const BUNDLED_SKILL_RANK = 600
+  const USER_AGENTS_RANK = 500
+  for (const candidate of await registered().list()) {
+    assert.ok(
+      candidate.rank < BUNDLED_SKILL_RANK,
+      `${candidate.name}: rank 必须小于 ${BUNDLED_SKILL_RANK}，否则覆盖不了内置 skill`,
+    )
+    assert.ok(
+      candidate.rank > USER_AGENTS_RANK,
+      `${candidate.name}: rank 必须大于 ${USER_AGENTS_RANK}，否则用户无法用自己的 skill 覆盖本包`,
+    )
+  }
+})
