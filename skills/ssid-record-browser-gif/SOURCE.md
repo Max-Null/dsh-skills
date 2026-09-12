@@ -36,7 +36,7 @@
 
 **新增**：
 
-- **当前缺失依赖的显式标注**：本机未安装 `ffmpeg` / `ffprobe`，编码步骤暂时不可用；按纪律**报告依赖而不自行安装**。
+- **媒体依赖的现状**：`ffmpeg` / `ffprobe` **9.0.1**（gyan.dev release-essentials，106 MB）解压在本机 `H:\MaxNull\WorkStation\.build\ffmpeg\ffmpeg-9.0.1-essentials_build\bin\`，并写入**用户级 PATH**（便携版路线，`IsAdmin=False` 下的可行做法）。**编码器的 5 个自测已实测通过**（`python -m unittest test_encode_gif -v` → `Ran 5 tests … OK`）——这是「逐字复用」在本机成立的实际证据，不只是纸面声明。
 - **Windows 的命令差异**：`python3` 在本机解析到 Windows Store 应用别名（0 字节，执行返回 9009），而 `python` 可用（3.12.1）。**`Get-Command` 会报告它存在**——所以正文明确要求用 `python`，并写明「存在性检查不等于可用性检查」。
 
 ## 上游变动时的跟进方式

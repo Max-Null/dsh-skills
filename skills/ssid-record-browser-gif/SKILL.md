@@ -55,9 +55,9 @@ description: 在被要求制作、录制或生成演示浏览器工作流的 GIF
 
 ## 编码 GIF
 
-需要 `python3`、`ffmpeg` 与 `ffprobe`。**若媒体二进制缺失，报告依赖，而不是未经授权安装软件。**
+需要 Python 3、`ffmpeg` 与 `ffprobe`。**若媒体二进制缺失，报告依赖，而不是未经授权安装软件。**
 
-> **本机当前未安装 `ffmpeg` / `ffprobe`**，所以编码步骤暂时不可用。启用录制能力需要先由用户决定如何提供这两个二进制。
+> **本机的媒体二进制**：`ffmpeg` / `ffprobe` **9.0.1** 位于 `H:\MaxNull\WorkStation\.build\ffmpeg\ffmpeg-9.0.1-essentials_build\bin\`，已写入**用户级 PATH**；编码器的 5 个自测已实测通过。
 >
 > **Windows 上命令是 `python` 而不是 `python3`**：本机的 `python3` 解析到 Windows Store 应用别名（0 字节，执行返回 9009），而 `python` 解析到 `C:\Python312\python.exe`（3.12.1）。**`Get-Command python3` 会报告它存在，但它跑不起来**——下面的命令在 Windows 上把 `python3` 换成 `python`。**存在性检查不等于可用性检查。**
 
