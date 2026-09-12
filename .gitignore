@@ -6,3 +6,5 @@ node_modules/
 # Python 缓存（record-browser-gif 的编码器自测会生成）
 __pycache__/
 *.pyc
+# 图书馆构建的中间产物（由 build-index.mjs 重建；index.html 入库）
+library.json
