@@ -18,7 +18,7 @@ git status --short --branch
 git rev-parse --show-toplevel
 ```
 
-2. **先确认比较基准，不要想当然**——用上次发版 tag 或目标分支的实时 ref（本仓库有 19 个 release tag 可作候选，最近的是 `v0.2.1`）。然后看完整范围：
+2. **先确认比较基准，不要想当然**——用上次发版 tag 或目标分支的实时 ref（候选用 `git tag --sort=-creatordate | head` 现取，不要引用写死的 tag 名）。然后看完整范围：
 
 ```sh
 git diff --stat <verified-base>..HEAD
@@ -43,7 +43,7 @@ git diff --stat <verified-base>..HEAD
 
 | 改了什么 | 跑什么 |
 |---|---|
-| 包或脚本行为 | 属主测试：`shell/` 用 node:test（`npm test`、`npm run test:profile-merge`、`npm run test:codegraph-adapt`）；插件按各自 runner。**注意 9 个插件用 `tests/`、3 个用 `test/`** |
+| 包或脚本行为 | 属主测试：`shell/` 用 node:test（`npm test`、`npm run test:profile-merge`、`npm run test:codegraph-adapt`）；插件按各自 runner。**插件目录里 `tests/` 与 `test/` 两种命名并存，调用前先看该目录是哪个** |
 | `src/` 的类型或构建 | `npm run typecheck`（shell）或插件 `pnpm typecheck`——`lib/` 是派生物，改 `src/` 后要确认构建产物与源一致 |
 | 文档、注释、skill 正文 | `ssid-prose-standard` 的人工语义核 + 相关链接可用性检查 |
 | 界面可见输出 | Playwright 截图基线：`cd shell/tests/plugin-adapt && npm test`。**基线变了要问为什么变**——把它的 diff 当行为变更评审，不是格式噪音 |

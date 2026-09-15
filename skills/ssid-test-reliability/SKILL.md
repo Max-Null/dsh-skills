@@ -18,8 +18,8 @@ description: 在设计或修改可能因并发、共享资源、时钟、进程�
 
 | 运行器 | 归属规则在哪 |
 |---|---|
-| vitest（10 个插件） | 各插件的 `vitest.config.ts`——只设 `include` 与 `environment`，**没有超时配置** |
-| node:test（shell 本体、dsh-chat-rail、dsh-quick-toolbar、dsh-ssid-panels） | **没有配置文件**——纪律只存在于 `package.json` 的 `test` 脚本里 |
+| vitest | 各插件的 `vitest.config.ts`（**并非每个包都有**，缺省时靠 vitest 默认 `include`）——**全都没有超时配置**，所以下面的默认值直接生效 |
+| node:test（`shell/` 本体、`dsh-chat-rail`、`dsh-quick-toolbar`、`dsh-dream-skin`、`dsh-skills`） | **没有配置文件**——纪律只存在于 `package.json` 的 `test` 脚本里 |
 | Playwright | `shell/tests/plugin-adapt/playwright.config.ts` |
 
 外加 `docs/SSiD开发手册.md` §9（插件开发与测试规范，含 L1/L2/L3 分级门槛）。
@@ -50,7 +50,7 @@ description: 在设计或修改可能因并发、共享资源、时钟、进程�
 - **稳定的录制标识符要与临时传输地址分开。**
 - **仅作为解析器输入或期望值出现的字面路径/URL 不是被获取的资源**——不要因为看起来固定就改写它们。
 
-**本仓库的现存问题**：`shell/tests/plugin-adapt/` 下约 28 个探针脚本硬编码 `'http://127.0.0.1:9222'`（未走 `SSID_CDP` 回退），另有 5 个写死 `3083` / `54170`，2 个写死用户绝对路径。**该目录的 `README.md` 自己已写明"页面 URL 是随机端口，断言勿硬编码端口"。** 规范写法在同一目录里就有——约 22 个文件用 `process.env.SSID_CDP ?? 'http://127.0.0.1:9222'`。**新增脚本一律用环境变量回退；改到旧脚本时顺手统一。**
+**本仓库的现存问题**：`shell/tests/plugin-adapt/` 的探针脚本里仍有写死的固定端口（`3083` 一类）。**该目录的 `README.md` 自己已写明"页面 URL 是随机端口，断言勿硬编码端口"。** 规范写法是 `process.env.SSID_CDP ?? 'http://127.0.0.1:9222'`。**新增脚本一律用环境变量回退；改到旧脚本时顺手统一。** 现状按命令核对，不要引用写死的计数：`rg -n "127\\.0\\.0\\.1:9222|3083|54170" shell/tests/plugin-adapt`——回退写法也会命中，逐行看是否带了 `SSID_CDP`。
 
 ## 4. 隔离进程全局状态
 
@@ -162,7 +162,7 @@ Electron 与 Playwright 测试尤其吃这套：`shell/tests/plugin-adapt/` 的�
 
 诊断路径：本地复现 → Playwright trace（浏览器类）→ 日志定位（`~/.ssid/ssid.log`）→ 对照 `docs/排查/` 的既有记录。
 
-**本仓库的诊断清单尚未建立**：`docs/排查/` 目前只有 1 份记录（窗口不定时跳出）。遇到新的失败模式时，把结论写回那里，**不要凭印象下判断**。
+**本仓库的诊断清单尚未建立**：`docs/排查/` 里已有的记录不多（先列目录，别凭印象说"没有"）。遇到新的失败模式时，把结论写回那里，**不要凭印象下判断**。
 
 ## 12. 验证与报告
 
@@ -179,7 +179,7 @@ Electron 与 Playwright 测试尤其吃这套：`shell/tests/plugin-adapt/` 的�
 
 | 目标 | 命令 |
 |---|---|
-| shell 本体（2 个文件） | `npm test` |
+| shell 本体 | `npm test`（`shell/package.json` 的 `test` 脚本，含行为 spec 与检查脚本 spec） |
 | shell 单文件 | `npm run test:profile-merge` / `npm run test:codegraph-adapt` |
 | 插件 | `pnpm test`（vitest）或 `npm test`（node:test，看该插件的脚本） |
 | Playwright | `cd shell/tests/plugin-adapt && npm test`；另有 `npm run test:ui`、`npm run baseline` |
@@ -187,7 +187,7 @@ Electron 与 Playwright 测试尤其吃这套：`shell/tests/plugin-adapt/` 的�
 
 **两个坑**：
 
-1. **Playwright 不在 `npm test` 里**。shell 的 `test` 脚本只跑那两个 node:test 文件。**只看 `npm test` 绿就宣布"全绿"是错的。**
+1. **Playwright 不在 `npm test` 里**。shell 的 `test` 脚本跑 `tests/` 下的行为 spec 与 `scripts/` 下的检查脚本 spec，**不含 Playwright**；清单以脚本现取：`node -p "require('./shell/package.json').scripts.test"`。**只看 `npm test` 绿就宣布"全绿"是错的。**
 2. **包管理器不统一**。多数插件只有 `pnpm-lock.yaml`，但 `dsh-memory` 同时存在 `package-lock.json` 与 `pnpm-lock.yaml`——**调用前先看该插件目录里是哪个锁文件**。
 
 报告要说清：改了什么、跑了什么、**有意没跑什么以及为什么**。

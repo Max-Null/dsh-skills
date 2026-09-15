@@ -32,7 +32,7 @@
 | `dsh-archive-agent-notes` | 依赖 Agent Note 的状态机、三件套与归档封印；思灵的 `docs/决策/` 没有状态机 |
 | `dsh-merging-stacked-prs` | 围绕 `gh stack` 堆叠 PR 扩展；其通用判据（重写后重新审计）已在 `ssid-pre-push-checks` 里 |
 
-完整理由见 `seek-soul-in-darkness/docs/决策/2026-09-10-skill适配说明-09-不适用理由.md`。
+完整理由见 `docs/适配说明/2026-09-10-skill适配说明-09-不适用理由.md`。
 
 ## 截图
 
@@ -93,8 +93,4 @@ DSH 的 skill 优先级**数字小的赢**。官方定义的刻度是：
 npm test
 ```
 
-用 node:test 跑 8 个测试：provider 注册、候选校验、frontmatter 剥离、排序稳定性、带脚本 skill 的完整性，以及 **frontmatter 字段受控 + description 不总结工作流**（后一条依据：描述里写了工作流，agent 会照描述做、跳过正文）。
-
-## 关于 README 截图
-
-本包**没有界面**，因此没有 `## 截图` 段与 `docs/shots/`——那条规则针对的是有用户可见界面的插件。
+用 node:test 覆盖：provider 注册、候选校验、frontmatter 剥离、排序稳定性、带脚本 skill 的完整性，以及 **frontmatter 字段受控 + description 不总结工作流**（后一条依据：描述里写了工作流，agent 会照描述做、跳过正文）。
