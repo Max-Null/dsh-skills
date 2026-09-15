@@ -1,6 +1,6 @@
 {
   "name": "@max-null/dsh-skills",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "DSH 官方 skill 的 SSiD 适配版：把 deepseek-harness .agents/skills 的工程判据移植到思灵仓库，每份 skill 附 SOURCE.md 来源与版本标记",
   "type": "module",
   "main": "lib/index.mjs",
