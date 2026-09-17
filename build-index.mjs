@@ -27,10 +27,19 @@ const OUT_HTML = path.join(HERE, 'index.html');
 /** 不进图书馆的目录 */
 const EXCLUDE = new Set(['lib', 'node_modules', '.git', 'tests', 'dist', 'build', '.github']);
 
+/** 技能目录的来源类别：读该目录的 SOURCE.md 判定，未标记者按上游适配处理 */
+function skillGroup(name) {
+  try {
+    const source = fs.readFileSync(path.join(HERE, 'skills', name, 'SOURCE.md'), 'utf8');
+    return source.includes('思灵自创') ? '自创技能' : '上游适配';
+  } catch { return '上游适配'; }
+}
+
 /** 路径 → 分类 */
 function classify(rel) {
   if (rel.startsWith('skills/') && rel.includes('/references/')) return '参考';
-  if (rel.startsWith('skills/')) return 'skills';
+  const skill = rel.match(/^skills\/([^/]+)\//);
+  if (skill) return skillGroup(skill[1]);
   if (rel.startsWith('docs/适配说明/')) return '适配说明';
   return '库说明';
 }
