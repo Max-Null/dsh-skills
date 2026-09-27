@@ -38,6 +38,18 @@
 - **铁律编号变动**：技能正文引用了 `AGENTS.md` 的 2.0 / 2.1
 - **上游发布节奏变化**：tag 与 npm 两套口径的关系（正文第 3 步的前提）若不再成立
 
+## 维护记录
+
+| 日期 | 触发条件 | 改了什么 |
+|---|---|---|
+| 2026-09-28 | **三库架构调整**（上面第 1 条）：自建壳运行时归档、SSiD 换代到官方壳基座 | ① §5「内核 API 兼容」的检查对象，从 `shell/kernel.ts` 的四个 import 换成「SSiD 直接 import 的 `@deepseek-ai/dsh-*` 包」（扫描命令已写进该行）；② 新增「先确认检查对象是活代码」一节；③ 隐私检查项补「服务提供者 / 适配器 / 采集器」的角色判据 |
+
+**为什么会漏到现在**：`shell/` 归档发生在 2026-09（tag `v0.4.0-selfbuilt`），但 `shell/` 目录里的文件**没有全删**——`kernel.bundle.mjs`、`kernel-child.bundle.mjs`、`boot-bundled.mjs` 都还在，且它们仍然 `import` DSH 的 `app-boot` / `cmdline` / `launch-environment`。照路径核对时，这些残留物看起来完全像活代码。
+
+**怎么发现的**：2026-09-28 那轮观察按 §5 去核对 `healProfilesModuleFallback`，发现该函数已从 `app-boot` 导出面移除、而 `kernel.bundle.mjs:351` 仍在调用它、且调用点在一个会重新抛出异常的大 `try` 里——**据此几乎报出「SSiD 启动会崩」的假警报**。真正的判据是 `shell/package.json` 的 description，它写明运行时已归档到 tag `v0.4.0-selfbuilt` / 分支 `archive/selfbuilt-shell`。
+
+**同一批修正**：`seek-soul-in-darkness/AGENTS.md` 的库结构描述（原写「`shell/`（main.mjs Electron 壳 + kernel.ts 内核启动）」）与「常用命令」段（原列 `npm start` / `npm run bundle-kernel` 等已随归档消失的脚本）一并更正。
+
 ## 与上游适配类技能的边界
 
 | | 上游适配类（本库 8 个） | 本技能 |

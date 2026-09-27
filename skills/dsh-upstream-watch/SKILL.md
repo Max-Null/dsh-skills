@@ -52,9 +52,13 @@ git -C DSHfork checkout --detach origin/master
 |---|---|
 | 我们的插件 | `max-null-plugins/`、`seek-soul-in-darkness/plugins/`、`third-party-plugins/` 是否用到被改的钩子名、服务名、工具名 |
 | 模板依赖清单 | `shell/profile-template/pnpm-workspace.yaml` 的 overrides 是否 pin 了已删或已改名的包；profile 闭包里是否残留实体 |
-| 内核 API 兼容 | `seek-soul-in-darkness/shell/kernel.ts` 的四个 import：`app-boot` 的 `healProfilesModuleFallback` / `initProfile` / `loadProfile`、`cmdline` 的 `provideCmdline`、`launch-environment` 的 key |
-| 隐私与默认值 | 新挂载的插件是否默认上传数据、默认开启什么；交付型产品要不要在 patch 层关掉 |
+| 内核 API 兼容 | SSiD 直接 import 的 `@deepseek-ai/dsh-*` 包。**扫描**：`Get-ChildItem seek-soul-in-darkness/ssid-desktop -Recurse -Include *.ts,*.tsx,*.json \| Select-String "from '(@deepseek-ai/dsh-[a-z0-9-]+)"`，去重后与本区间被改动的包取交集，逐个核对导出面。**当前运行时是 `ssid-desktop/`**（`@deepseek-ai/dsh-desktop`，官方壳基座）；`shell/` 的自建壳运行时**已归档** |
+| 隐私与默认值 | 新挂载的插件是否默认上传数据、默认开启什么；交付型产品要不要在 patch 层关掉。**先看挂载的包是什么角色，再判有没有新增采集**：服务提供者（只注册 `ctx.*` 服务，挂载不建连接、不发数据）/ 适配器（Consumer，拥有授权、脱敏、通道销毁）/ 采集器本身。最省事的分辨法——**看消费方适配器在本区间是变大还是变小**：「把传输实现抽成共享服务」的重构会让适配器**缩小**并删掉自带的传输依赖 |
 | 启动严格性 | 必需 entry 清单是否变化，裁剪过的 profile 组合会不会被拒绝启动 |
+
+**先确认检查对象是活代码，再核对它。** 本 skill 早先指引核对 `seek-soul-in-darkness/shell/kernel.ts` 的四个 import；那个文件早已随自建壳运行时归档（`shell/package.json` 的 description 写明运行时归档到 tag `v0.4.0-selfbuilt` / 分支 `archive/selfbuilt-shell`），当前 SSiD 用官方壳基座。同目录残留的 `kernel.bundle.mjs` 仍在调用 `healProfilesModuleFallback`，而该函数已从 `app-boot` 的导出面移除——**照着路径核对，会报出「已验证会坏」的假警报**。
+
+判据：**动手前 `Test-Path` 一次，并读目标目录的 `package.json` description**（它常写明该目录是否已归档）。归档目录里的代码不是检查对象。
 
 **结论分三档写**：已验证会坏 / 需要评估 / 核验通过。「核验通过」同样要写——它防止下一轮重复核对。
 
