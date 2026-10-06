@@ -42,12 +42,17 @@ Get-ChildItem -Recurse -Filter "session.v*.jsonl.zstd" | Sort-Object LastWriteTi
 
 **看三个数，一起看**：
 
-1. **峰值压力 vs 实测压缩触发点**。压缩阈值是**配置项**（`thresholdRatio`：内核默认 0.8，SSiD 的
-   preset 是 0.5），**不要按默认值推算**——报告里那行「自动压缩阈值」是按 0.8 算的，对本机 SSiD
-   不成立。**以日志里的 `compaction/start` 事件为准**：取它前面最后一个 usage 采样，就是这次压缩
+1. **峰值压力 vs 实测压缩触发点**。压缩阈值是**配置项**，**不要按默认值推算**——报告里那行
+   「自动压缩阈值」是按内核默认 0.8 算的。本机 SSiD 的 preset 用 **0.6**，校准位置：
+   `seek-soul-in-darkness/presets/ssid-double-star/agent.cordis.yml` 的 `compaction` 段（改了以那里为准）。
+   **以日志里的 `compaction/start` 事件为准**：取它前面最后一个 usage 采样，就是这次压缩
    的真实触发压力。
 2. **重复率的爬升**。判据 = 单条 reasoning 输出按换行与中英句读切分后，出现 ≥3 次的单元占比。
    报告给出峰值、越线次数、**最早越线时的 token 数**。
+   **但本脚本的口径比应变宽**：它不滤纯标记单元（`**`、`）**`、代码围栏），同一段输出算出的数字
+   会比 `dsh-allostasis` 高——实测同一步 57% vs 45%、53% vs 37%。**要判断「应变为什么没提醒」，
+   必须用应变的判据重算**（`max-null-plugins/dsh-allostasis/src/repetition.ts` 的 `measureRepetition`
+   + `repetitionVerdict` + `trackLoop`），别拿本报告的数字直接推。
 3. **压缩事件的位置**（`compaction/start` 的 seq）。
 
 **别拿占用数字推断退化程度**——两者没有可区分的关系。一份 19 轮会话的实测：压缩把占用从

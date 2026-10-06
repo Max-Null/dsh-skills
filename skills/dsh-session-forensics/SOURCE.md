@@ -40,7 +40,8 @@
 本技能**不需要**跟随 DSH 版本迭代，但下列任一情况发生时必须更新：
 
 - **会话日志格式变化**：`assistant/message` 的 usage 字段、推理文本的 `texts` 结构、或日志的压缩容器改变 → 同步更新技能正文与配套工具
-- **压缩默认值变化**：`thresholdRatio` / `DEFAULT_CONTEXT_WINDOW` 的默认值调整 → 技能正文里引用了 0.8 与 1,000,000
+- **压缩默认值变化**：内核的 `thresholdRatio` / `DEFAULT_CONTEXT_WINDOW` 默认值调整 → 技能正文里引用了 0.8 与 1,000,000；**SSiD preset 覆盖值（当前 0.6）改变时，正文的「实测压缩触发点」一条要同步**
+- **应变判据变化**：`dsh-allostasis` 的 `measureRepetition` / `repetitionVerdict` / `trackLoop` 判定口径调整 → 正文里「本脚本口径比应变宽」那段引用了它的滤单元规则（纯标记不入统计）
 - **配套工具改名或移动**：技能正文按路径引用 `session-degeneration-scan.mjs`
 - **新的退化判据出现**：若将来有比「行级重复率」更可靠的信号，替换「判据为什么这么算」一节
 
